@@ -1,0 +1,53 @@
+You are writing the "Bible" (character and story foundation) for a long-form first-person YouTube narration in the "calm drama / quiet revenge" genre for the channel "underestimated".
+
+GENRE CORE (do not deviate): the protagonist's profession taught them a specific way of seeing the world. That way of seeing produces a specific kind of record. Years later, that record — not a dramatic confrontation — is what exposes a family lie. The story ends in accumulated evidence and a deliberate refusal of revenge, not a heroic act.
+
+SEED FOR THIS STORY:
+- Profession: {{.Seed.Profession}}
+- Epistemology (the habit of mind this profession teaches): {{.Seed.Epistemology}}
+- Record type this profession keeps: {{.Seed.RecordType}}
+- Protagonist sex: {{.Seed.ProtagonistSex}}
+- Antagonist role: {{.Seed.Antagonist}}
+- Weak ally role: {{.Seed.WeakAlly}}
+- Humiliation type: {{.Seed.HumiliationType}}
+- Betrayal this record type must eventually expose: {{.Seed.Betrayal}}
+- Duration between the humiliation and the reckoning: {{.Seed.Duration}} years
+- Written overreach (the antagonist's self-incriminating document): {{.Seed.WrittenOverreach}}
+- Object container (where the narrator keeps things): {{.Seed.ObjectContainer}}
+- Legacy artifact: {{.Seed.LegacyArtifact}}
+- Reckoning place: {{.Seed.ReckoningPlace}}
+- Ending type: {{.Seed.EndingType}}
+- Region (drives names, town, everyday detail): {{.Seed.Region}}
+
+Draw every character name and the narrator's town from the allowed name pool for this region, provided to you separately. Do not invent names freely.
+
+{{if .UsedNames}}Do not use any of these character names — they were already used in a previous script: {{range .UsedNames}}{{.}}, {{end}}
+{{end}}{{if .UsedPlaces}}Do not set this story in any of these towns — they were already used in a previous script: {{range .UsedPlaces}}{{.}}, {{end}}
+{{end}}{{if .UsedAphorisms}}Do not reuse any of these family-law formulations, word for word or near word for word: {{range .UsedAphorisms}}{{.}}; {{end}}
+{{end}}
+{{if .Violations}}Your previous attempt failed validation for these reasons — fix all of them:
+{{range .Violations}}- {{.}}
+{{end}}
+{{end}}
+Describe the narrator's appearance in plain, concrete, neutral terms suitable for an image prompt. "build" is exactly one of: slight, average, sturdy. "hair" states color, length, and how it's worn or kept (e.g. "gray, cropped short", "dark, pulled back in a low bun"). "face_note" is ONE specific facial detail, not a list (e.g. "faint scar above the left eyebrow", "deep smile lines", "wire-rim glasses", "a streak of gray at the temple") — pick the single most concrete, memorable one, not several stacked together. No adjectives about beauty or attractiveness. No brand names.
+
+Return ONLY a single JSON object, no other text, no markdown fences, with exactly this shape:
+
+{
+  "title": "a specific, concrete YouTube title, not clickbait, no ALL CAPS",
+  "narrator": {"name": "...", "age": 30, "role": "narrator", "city": "...", "profession": "{{.Seed.Profession}}", "physical_tic": "...", "build": "slight|average|sturdy", "hair": "...", "face_note": "..."},
+  "cast": [
+    {"name": "...", "age": 60, "role": "antagonist", "physical_tic": "..."},
+    {"name": "...", "age": 60, "role": "weak_ally", "physical_tic": "..."}
+  ],
+  "timeline": [
+    {"year": 1, "what": "the humiliation"},
+    {"year": 0, "what": "..."}
+  ],
+  "family_law": "the family's unspoken rule, one or two sentences",
+  "refrain_phrase": "a short phrase the narrator repeats, tied to the profession's epistemology",
+  "seeded_line": "an ordinary-sounding line someone says early that means something different later",
+  "numbers": {"key": "a precise figure spelled out in words, e.g. twelve hundred dollars"}
+}
+
+Every name in "narrator" and "cast" must be unique. "timeline" years must be non-decreasing. Every character needs a distinct physical_tic. Keep names, the town, and every number consistent — this bible is the single source of truth every later chapter must match exactly.

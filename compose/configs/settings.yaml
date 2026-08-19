@@ -1,0 +1,45 @@
+# Where each upstream module's output lives — compose reads exactly these
+# files and nothing else from those modules (no shared database, no Go
+# imports across module boundaries).
+background_dir: ../background/output
+voiceover_dir: ../voiceover/output
+avatar_dir: ../avatar/output
+
+background_file: bg.mp4
+voice_file: voice.wav
+timing_file: timing.json
+# avatar's CLI writes "portrait.png" today, not "portrait-video.png" —
+# this is the one line to change if that ever gets renamed.
+portrait_file: portrait.png
+
+output_dir: output
+
+# Blank = render without a logo (this channel has no logo). Point it at a
+# PNG to overlay one top-left.
+logo_file: ""
+# Blank = render without background music (this channel has none). Point it
+# at a track to mix music (ducked under the voice) back in.
+music_file: ""
+# Only required when music_file is set: where that track's royalty-free
+# license is documented (a URL, a receipt path, "CC0").
+music_license_note: ""
+
+# rembg (Python, `pip install rembg`) must be on PATH, or set a full path
+# here. Compose cannot install Python for you.
+rembg_cmd: rembg
+cutout_cache_dir: cache/cutouts
+
+output_width: 1920
+output_height: 1080
+output_fps: 30
+
+# Tries h264_nvenc first (hardware-encoded, several times faster on a real
+# GPU) and falls back to libx264 automatically if nvenc fails for any
+# reason (no GPU, driver too old, no nvenc in this ffmpeg build).
+prefer_nvenc: true
+nvenc_preset: p4
+nvenc_bitrate: 4M
+libx264_preset: faster
+
+ffmpeg_cmd: ffmpeg
+ffprobe_cmd: ffprobe

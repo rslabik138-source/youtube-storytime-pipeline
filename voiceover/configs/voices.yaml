@@ -1,0 +1,157 @@
+# Voice catalog for internal/catalog.Select. American English only
+# (af_* = American female, am_* = American male, per Kokoro's own locale
+# prefix convention — confirmed against the live voice list: b=British,
+# e=Spanish, f=French, h=Hindi, i=Italian, j=Japanese, p=Portuguese,
+# z=Mandarin all showed up too, af_/am_ are the only "a" = American ones).
+# `_v0*` variants (af_v0, af_v0bella, am_v0adam, ...) are excluded — older
+# generation duplicates of voices already listed here under their current
+# name.
+#
+# sex and age_feel below are NOT guesses — they're derived from real,
+# measured fundamental frequency (median F0, autocorrelation over ~300+
+# voiced frames per voice, from an actual sample of each via `voice
+# sample`), bucketed using your thresholds:
+#   female: <180Hz mature, 180-220Hz middle, >220Hz young
+#   male:   <100Hz mature, 100-130Hz middle, >130Hz young
+# age_feel per bucket: mature=[45,65], middle=[30,46], young=[20,32].
+#
+# texture is explicitly "unverified" — that's a timbre/character judgment
+# pitch alone can't answer. Listen (`voice sample --voice <id> --text
+# "..."`) and replace it with an actual word (warm, measured, weathered,
+# neutral, ...) before relying on it for anything.
+voices:
+  # ---- female, mature (measured F0 < 180Hz) ----
+  - id: af_alloy   # 144.6 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_jadzia   # 154.8 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_sky   # 150.9 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_kore   # 156.9 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_nicole   # 156.9 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_nova   # 156.9 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  - id: af_river   # 169.0 Hz
+    sex: female
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  # ---- female, middle (180-220Hz) ----
+  - id: af_aoede   # 180.5 Hz — right at the boundary, borderline mature/middle
+    sex: female
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: af_sarah   # 186.0 Hz
+    sex: female
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: af_heart   # 193.5 Hz
+    sex: female
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: af_bella   # 201.7 Hz
+    sex: female
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: af_jessica   # 206.9 Hz — highest measured female pitch in the roster
+    sex: female
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  # ---- female, young (>220Hz) ----
+  # NONE — no American female Kokoro voice measured above 206.9 Hz. If a
+  # script ever needs a narrator who reads as young, af_jessica/af_bella
+  # (the two highest, ~200-207Hz) are the closest available, not a real
+  # match for the >220Hz bucket.
+
+  # ---- male, mature (<100Hz) ----
+  - id: am_onyx   # 85.4 Hz — deepest voice in the roster
+    sex: male
+    accent: us
+    age_feel: [45, 65]
+    texture: unverified
+
+  # ---- male, middle (100-130Hz) ----
+  - id: am_puck   # 107.6 Hz
+    sex: male
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: am_echo   # 109.1 Hz
+    sex: male
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: am_michael   # 114.8 Hz
+    sex: male
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: am_adam   # 117.6 Hz
+    sex: male
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  - id: am_liam   # 125.0 Hz
+    sex: male
+    accent: us
+    age_feel: [30, 46]
+    texture: unverified
+
+  # ---- male, young (>130Hz) ----
+  - id: am_fenrir   # 137.9 Hz
+    sex: male
+    accent: us
+    age_feel: [20, 32]
+    texture: unverified
+
+  - id: am_eric   # 156.9 Hz — highest measured male pitch, above your stated 155Hz ceiling
+    sex: male
+    accent: us
+    age_feel: [20, 32]
+    texture: unverified
+
+  # am_santa (147.2 Hz) is deliberately left out of rotation — it's
+  # Kokoro's novelty "Santa Claus" character voice, not a narration voice,
+  # regardless of what its pitch alone would suggest. Add it back only if
+  # you actually want that read for something.

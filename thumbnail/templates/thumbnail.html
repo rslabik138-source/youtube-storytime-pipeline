@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1280px; height: 720px;
+    overflow: hidden;
+    background: #111;
+    font-family: Impact, "Arial Narrow Bold", "Franklin Gothic Heavy", "Arial Black", sans-serif;
+  }
+
+  /* Full-frame blurred backdrop — a still frame from the video's own
+     background clip, so the thumbnail reads as part of the video. Sits
+     behind everything; the #scrim over it keeps the left-side text legible.
+     Absent (no BackgroundDataURI) leaves the flat #111 body showing. */
+  #bg {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transform: scale(1.15);
+    filter: blur(6px) brightness(1.0) saturate(1.4);
+  }
+  #scrim {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right,
+      rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.88) 44%,
+      rgba(0,0,0,0.45) 60%, rgba(0,0,0,0) 78%);
+  }
+
+  /* Text zone: left 3%, 66% wide, vertically centered. Padding is tight so
+     the words fill the zone nearly edge to edge — the old 24-28px padding
+     shrank the usable width enough to force a smaller font. */
+  #text-zone {
+    position: absolute;
+    left: 3%; top: 0;
+    width: 66%; height: 100%;
+    padding: 14px 8px 18px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 6px;
+  }
+
+  #lines .line {
+    display: block;
+    text-transform: uppercase;
+    font-weight: 900;
+    -webkit-text-stroke: 6px black;
+    paint-order: stroke fill;
+    line-height: 1.05;
+    /* balance spreads a wrapped line's words evenly across its rows instead
+       of leaving a single orphan word on the last row — the JS orphan pass
+       below is the hard backstop, this is the cheap first line of defense. */
+    text-wrap: balance;
+    word-wrap: break-word;
+  }
+
+  .color-white   { color: #ffffff; }
+  .color-yellow  { color: #ffd400; }
+  .color-green   { color: #33ff66; }
+  .color-magenta { color: #ff33cc; }
+  .color-cyan    { color: #33e5ff; }
+  .color-red     { color: #ff3b30; }
+
+  #final-line {
+    display: inline-block;
+    margin-top: 4px;
+    background: #E01B1B;
+    color: #ffffff;
+    text-transform: uppercase;
+    font-weight: 900;
+    padding: 6px 12px;
+    -webkit-text-stroke: 3px black;
+    paint-order: stroke fill;
+    line-height: 1.05;
+    align-self: flex-start;
+    text-wrap: balance;
+  }
+
+  /* Portrait: right 40%, cropped TIGHT to head & shoulders. The source
+     faces are waist-up; scaling the image up and anchoring it to the top
+     inside an overflow-hidden column pushes the torso out of frame and
+     lifts the face to ~22-28% of the canvas height. */
+  #portrait-wrap {
+    position: absolute;
+    right: 0; top: 0;
+    width: 40%; height: 100%;
+    overflow: hidden;
+    /* Fade the portrait's left edge into the blurred backdrop so it reads as
+       a subject standing in the scene, not a pasted rectangular panel. */
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, #000 14%, #000 100%);
+    mask-image: linear-gradient(to right, transparent 0%, #000 14%, #000 100%);
+  }
+  #portrait {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    transform: scale(1.32);
+    transform-origin: top center;
+  }
+
+  #badge {
+    position: absolute;
+    left: 20px; bottom: 16px;
+    background: rgba(0, 0, 0, 0.55);
+    color: #ffffff;
+    font-family: Arial, sans-serif;
+    font-weight: 700;
+    font-size: 22px;
+    padding: 6px 12px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+</style>
+</head>
+<body>
+  {{if .BackgroundDataURI}}<img id="bg" src="{{.BackgroundDataURI}}" alt="">
+  <div id="scrim"></div>{{end}}
+  <div id="portrait-wrap"><img id="portrait" src="{{.PortraitDataURI}}" alt=""></div>
+
+  <div id="text-zone">
+    <div id="lines">
+      {{range .Lines}}<span class="line color-{{.Color}}">{{.Text}}</span>
+      {{end}}
+    </div>
+    <span id="final-line">{{.FinalLine}}</span>
+  </div>
+
+  {{if .BadgeEnabled}}<div id="badge">{{.BadgeText}}</div>{{end}}
+
+<script>
+// fitText grows #text-zone's font-size to the LARGEST that still (a) fits
+// the zone's height and (b) leaves no orphan: no wrapped line whose last
+// visual row is a single short word (< 40% of the zone's width). Thumbnail
+// lines vary a lot in length, so a fixed size either overflows a long line
+// or wastes space; searching high->low and returning the first size that
+// clears both checks is the largest legible fit. Called explicitly by the
+// renderer after load; must finish before the screenshot.
+window.fitText = function() {
+  var zone = document.getElementById('text-zone');
+  var lineEls = document.querySelectorAll('#lines .line');
+  var finalLine = document.getElementById('final-line');
+  var maxFont = 96;
+  var minFont = 20;
+  var step = 2;
+  var orphanFloor = 0.40; // a last row narrower than this fraction of the zone is an orphan
+  // The zone's generous top/bottom padding (see #text-zone) already reserves
+  // headroom for the thick -webkit-text-stroke; the fit target is therefore
+  // the padding box itself. NB: this zone is a fixed-height centered flex
+  // column, so scrollHeight is clamped UP to clientHeight when the content
+  // fits and only exceeds it on real overflow — meaning `scrollHeight <=
+  // clientHeight` is the correct fit test, and subtracting any margin from
+  // it would make the test never pass.
+
+  function apply(size) {
+    lineEls.forEach(function(el) { el.style.fontSize = size + 'px'; });
+    finalLine.style.fontSize = Math.round(size * 0.84) + 'px';
+  }
+
+  // The zone's own inner width (minus padding) is what a line wraps inside.
+  function zoneTextWidth() {
+    var cs = getComputedStyle(zone);
+    return zone.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+  }
+
+  // hasOrphan: true if any line wraps to >1 row and its last row is
+  // narrower than orphanFloor * zoneTextWidth. Uses getClientRects over a
+  // Range covering the element's text — one client rect per visual row.
+  function hasOrphan(w) {
+    for (var i = 0; i < lineEls.length; i++) {
+      var el = lineEls[i];
+      if (!el.firstChild) continue;
+      var range = document.createRange();
+      range.selectNodeContents(el);
+      var rects = range.getClientRects();
+      if (rects.length > 1) {
+        var last = rects[rects.length - 1];
+        if (last.width < orphanFloor * w) return true;
+      }
+    }
+    return false;
+  }
+
+  var w = zoneTextWidth();
+  var fitH = zone.clientHeight;
+
+  // Phase 1: the largest size whose text fits the zone's height. This is the
+  // real ceiling — the thumbnail should be as big as the frame allows.
+  var heightFit = minFont;
+  for (var size = maxFont; size >= minFont; size -= step) {
+    apply(size);
+    if (zone.scrollHeight <= fitH) { heightFit = size; break; }
+  }
+
+  // Phase 2: from that ceiling, step down only until no line leaves an orphan
+  // (a wrapped line whose last row is a lone short word) — but never below
+  // 70% of the height-fit size, so orphan avoidance nudges the font, it never
+  // shrinks the whole thumbnail to nothing.
+  var floor = Math.max(minFont, Math.round(heightFit * 0.7));
+  for (var s2 = heightFit; s2 >= floor; s2 -= step) {
+    apply(s2);
+    if (!hasOrphan(w)) return s2;
+  }
+  apply(heightFit);
+  return heightFit;
+};
+</script>
+</body>
+</html>

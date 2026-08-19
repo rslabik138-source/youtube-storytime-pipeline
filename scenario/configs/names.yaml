@@ -1,0 +1,49 @@
+# Regional name pools, split by generation: "young" (ages 25-35, usually the
+# narrator or their generation) and "old" (ages 55-70, usually the
+# antagonist's generation). Seed.Region picks one of these regions, which
+# drives which name pool, town list, and everyday detail the bible draws
+# from — the model gets an allowed list, it doesn't invent names freely.
+#
+# bible.tmpl also receives the last 30 used_names/used_places from the
+# store and is told not to reuse them, so within a region these pools
+# should stay reasonably large.
+regions:
+  - name: midwest
+    towns: [Cedar Falls, Millbrook, Elm Ridge, Prairie Junction, Fort Hollis, Maple Grove]
+    generations:
+      young:
+        first_names: [Dana, Erin, Megan, Kyle, Brandon, Ashley, Kayla, Derek, Nicole, Tyler]
+        last_names: [Whitfield, Novak, Sorensen, Kowalski, Dietrich, Halvorsen, Bruckner, Zielinski]
+      old:
+        first_names: [Carol, Russell, Sharon, Gerald, Judith, Wayne, Donna, Harold, Marlene, Earl]
+        last_names: [Whitfield, Novak, Sorensen, Kowalski, Dietrich, Halvorsen, Bruckner, Zielinski]
+
+  - name: south
+    towns: [Millhaven, Cottonwood Bend, Piney Creek, Magnolia Falls, Sweetwater, Bellamy]
+    generations:
+      young:
+        first_names: [Bailey, Tanner, Whitney, Colton, Brittany, Dalton, Savannah, Cody, Destiny, Hunter]
+        last_names: [Voss, Boudreaux, Callahan, Whitfield, Pruitt, Ledbetter, Sutter, McAllister]
+      old:
+        first_names: [Russell, Peggy, Wendell, Loretta, Dwight, Faye, Roy, Darlene, Cecil, Ruthie]
+        last_names: [Voss, Boudreaux, Callahan, Pruitt, Ledbetter, Sutter, McAllister]
+
+  - name: northeast
+    towns: [Ashford, Millbridge, Blackstone, Fairhaven, Concord Mills, Harrow]
+    generations:
+      young:
+        first_names: [Colleen, Ryan, Meghan, Sean, Caitlin, Brendan, Kerry, Declan, Siobhan, Patrick]
+        last_names: [Doherty, Marchetti, Kowalczyk, Fitzgerald, Rourke, Costanzo, Brennan, DiSalvo]
+      old:
+        first_names: [Margaret, Francis, Eileen, Vincent, Rosemary, Salvatore, Patricia, Gerald, Theresa, Walter]
+        last_names: [Doherty, Marchetti, Kowalczyk, Fitzgerald, Rourke, Costanzo, Brennan, DiSalvo]
+
+  - name: pacific_nw
+    towns: [Cedar Harbor, Sequim Falls, Mossgrove, Fircrest, Deception Cove, Willapa]
+    generations:
+      young:
+        first_names: [Jordan, Piper, Riley, Logan, Hazel, Emerson, Sawyer, Marina, Finn, Wren]
+        last_names: [Larkin, Osgood, Thorne, Iversen, Whitcombe, Renner, Delacroix, Marsh]
+      old:
+        first_names: [Karen, Dennis, Linda, Roger, Carol, Alan, Diane, Kenneth, Barbara, Norman]
+        last_names: [Larkin, Osgood, Thorne, Iversen, Whitcombe, Renner, Delacroix, Marsh]

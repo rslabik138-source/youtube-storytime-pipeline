@@ -1,0 +1,11 @@
+Rewrite ONLY the sentence below so it says the same thing in different words. Keep the same meaning, the same facts, and roughly the same length — do not add new information, do not turn it into two sentences.
+
+SENTENCE TO REWRITE:
+{{.Sentence}}
+
+Do not use any of these phrases in the rewrite, in any form: {{range .Avoid}}"{{.}}", {{end}}
+
+TTS FORMATTING (critical): in "text", spell out every number, sum of money, and abbreviation as words — no digits and no "$". In "display_text", write the same content with normal formatting (digits, "$", abbreviations).
+
+Return ONLY a single JSON object, no other text, no markdown fences:
+{"text": "...", "display_text": "..."}

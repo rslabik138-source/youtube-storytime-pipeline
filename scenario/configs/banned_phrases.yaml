@@ -1,0 +1,30 @@
+# Case-insensitive substring matches against every chapter's TTS text
+# (story.ValidateChapterBannedPhrases). These are the stock LLM-narration
+# tells for this genre — add to this list whenever a new one shows up in
+# generated output.
+phrases:
+  - little did I know
+  - life would never be the same
+  - in that moment, I realized
+  - in that moment I realized
+  - I knew then that
+  - little did they know
+  - what happened next would change everything
+  - I could never have imagined
+  - I had no idea
+  - it was in that instant
+  - as fate would have it
+  - unbeknownst to
+  - I would soon discover
+  - I would come to learn
+  - what I didn't know was
+  - the final nail in the coffin
+  - the straw that broke the camel's back
+  - I was about to find out
+  - everything changed in an instant
+  - my world came crashing down
+  - I never saw it coming
+  - the calm before the storm
+  - little did we know
+  - I should have known better
+  - hindsight is 20/20

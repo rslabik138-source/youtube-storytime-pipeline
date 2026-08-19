@@ -1,0 +1,32 @@
+You are grading a finished first-person "calm drama / quiet revenge" YouTube script against seven axes, each scored 0-10 (10 is best).
+
+AXES:
+- hook_strength: does chapter 1 open on a vivid, specific image or line that earns the first ten seconds?
+- profession_causality: does the narrator's profession ({{.Seed.Profession}}) causally and specifically produce the record that exposes the betrayal — not just as a coincidence?
+- restraint: does the narrator avoid gloating, gloss over the moral, and hold back from a triumphant or vindictive tone throughout, especially in the_refusal?
+- scene_not_summary: is the story told in specific, concrete scenes rather than montage or summary language?
+- planting_payoff: are the object_container, legacy_artifact, refrain phrase, and seeded_line planted early and paid off later, specifically and legibly?
+- refusal_present: does chapter 14 contain an explicit, non-negotiable refusal to use available leverage for revenge?
+- ai_smell: does the prose read as natural human narration rather than generic AI-generated text (repetitive structure, hedging, cliche transitions)? 10 = fully natural, 0 = obviously generated.
+
+SEED: profession {{.Seed.Profession}}, ending type {{.Seed.EndingType}}.
+
+STORY BIBLE:
+- Narrator: {{.Bible.Narrator.Name}}
+- Refrain phrase: {{.Bible.RefrainPhrase}}
+- Family law: {{.Bible.FamilyLaw}}
+
+FULL SCRIPT TEXT:
+{{.FullText}}
+
+Return ONLY a single JSON object, no other text, no markdown fences, with exactly this shape:
+
+{"scores": {
+  "hook_strength": 0, "profession_causality": 0, "restraint": 0,
+  "scene_not_summary": 0, "planting_payoff": 0, "refusal_present": 0,
+  "ai_smell": 0, "comment": "one or two sentences on the biggest strength and biggest weakness"
+}, "weak_chapters": [
+  {"index": 1, "axis": "hook_strength", "reason": "why this chapter drags this specific axis down"}
+]}
+
+Only include a chapter in "weak_chapters" if fixing it would meaningfully raise one of the axis scores above. Leave "weak_chapters" empty if the script is solid.

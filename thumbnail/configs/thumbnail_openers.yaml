@@ -1,0 +1,31 @@
+# Opening-line constructions for thumbnail text. Every thumbnail is a dense
+# first-person mini-story (see prompts/thumbnail.tmpl) built in the style of
+# the channel's competitors — and the ONE thing that must never repeat run to
+# run is how that story opens. thumb picks one of these openers per thumbnail,
+# rotating deterministically and never reusing the last 3 (see
+# internal/openerpicker), and feeds the chosen construction into the prompt as
+# the required shape for line 1. Recent openers are also passed as an
+# avoid-list, belt-and-suspenders.
+#
+# The {placeholders} are filled by the model FROM THE STORY FACTS, not by us —
+# the picker fixes only the SHAPE of the opening beat, the model supplies the
+# words and then continues the story from there. These mirror how the
+# competitor thumbnails open: a concrete situation, a time frame, a betrayal,
+# or the antagonist's own cruel words.
+openers:
+  - id: on-the-day
+    pattern: "ON MY {big_day}, MY {family} {betrayed_me}."
+  - id: for-years-lie
+    pattern: "FOR {years} YEARS MY {family} {lie_they_told}."
+  - id: antagonist-quote
+    pattern: "MY {antagonist} {cruel_action} AND {snarled}: \"{quote}\""
+  - id: set-me-up
+    pattern: "MY {antagonist} SET ME UP BY {false_accusation}."
+  - id: when-i-gained
+    pattern: "WHEN I {gained_something}, MY {antagonist} {moved_to_take_it}."
+  - id: amount-was-mine
+    pattern: "{amount} WAS MINE. MY {antagonist} CALLED IT {euphemism}."
+  - id: they-thought
+    pattern: "THEY THOUGHT I JUST {menial_task} — THEY WERE WRONG."
+  - id: quote-first
+    pattern: "\"{quote},\" MY {antagonist} {said}. I SAID NOTHING."

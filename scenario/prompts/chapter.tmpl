@@ -1,0 +1,128 @@
+You are writing chapter {{.Spec.Index}} of 16 ("{{.Spec.Beat}}") of a first-person "calm drama / quiet revenge" YouTube narration for the channel "underestimated". Required length: between {{.MinWords}} and {{.MaxWords}} words, aiming for exactly {{.Spec.TargetWords}}. This is a hard requirement in BOTH directions, not a suggestion: even a short cta-style beat must reach at least {{.MinWords}} words by adding another beat of scene or interiority, never by padding with filler — and a big scene-heavy beat must still stop at {{.MaxWords}} words, never more. Plan the scene to fit {{.Spec.TargetWords}} words before you start writing; don't write until you run out of story and see where you land.
+
+BEAT DESCRIPTION: {{.Spec.Description}}
+
+STORY BIBLE (must stay consistent with everything below — never change a name, a number, or the timeline):
+- Narrator: {{.Bible.Narrator.Name}}, age {{.Bible.Narrator.Age}}, {{.Bible.Narrator.Profession}}, {{.Bible.Narrator.City}}
+- Cast: {{range .Bible.Cast}}{{.Name}} ({{.Role}}, age {{.Age}}); {{end}}
+- Family law (the family's unspoken rule): {{.Bible.FamilyLaw}}
+- Refrain phrase: {{.Bible.RefrainPhrase}}
+- Seeded line: {{.Bible.SeededLine}}
+- Numbers to reuse exactly: {{range $k, $v := .Bible.Numbers}}{{$k}}={{$v}}; {{end}}
+  These numbers must stay consistent whenever THAT SAME fact comes up again (e.g. the same dollar amount, the same duration) — they are not a free vocabulary of numbers to reach for. Never reuse one of these numbers for a different, unrelated fact or entity just because it's already established; invent a distinct number for anything new. Across the whole script, no single number from this list may be stated more than four times total.
+
+SEED: profession {{.Seed.Profession}} ({{.Seed.Epistemology}}), record type {{.Seed.RecordType}}, antagonist role {{.Seed.Antagonist}}, weak ally role {{.Seed.WeakAlly}}, betrayal {{.Seed.Betrayal}}, object container {{.Seed.ObjectContainer}}, legacy artifact {{.Seed.LegacyArtifact}}, written overreach {{.Seed.WrittenOverreach}}, reckoning place {{.Seed.ReckoningPlace}}.
+{{if .PriorChapters}}
+PRIOR CHAPTERS (stay consistent with these; do not repeat their exact phrasing or opening words):
+{{range .PriorChapters}}
+--- Chapter {{.Index}} ({{.Beat}}) ---
+{{if $.FullContext}}{{.Text}}{{else}}{{.Summary}}{{end}}
+{{end}}
+{{end}}
+{{if .AlreadyDramatized}}
+already_dramatized (events already shown as a full scene in a prior chapter):
+{{range .AlreadyDramatized}}- {{.}}
+{{end}}
+Do not re-dramatize any scene listed in already_dramatized. Reference it in one clause at most.
+{{end}}
+{{if .PartNumber}}
+SPLIT CHAPTER: this beat is long enough that it's being written in {{.PartTotal}} parts, one call at a time. You are writing part {{.PartNumber}} of {{.PartTotal}}.
+{{if eq .PartNumber 1}}Write the FIRST HALF of this beat only. Find a natural pause partway through the scene — not a resolution, not a cliffhanger gimmick, just where a real scene would breathe for a moment before continuing. Part 2 will carry on directly from wherever you stop.
+{{else}}Continue DIRECTLY from part 1 below — same scene, same moment, no time skip unless the beat itself calls for one. Do not repeat, re-summarize, or re-introduce anything part 1 already established; write only the continuation, picking up mid-scene, and carry the beat through to its conclusion.
+
+PART 1 (already written — do not repeat any of this, continue from where it ends):
+{{.PriorPartText}}
+{{end}}
+{{end}}
+STYLE RULES (mandatory):
+- First person, past tense throughout.
+- Short, declarative sentences. Fragments are fine. HARD LIMIT: no sentence may exceed 22 words, and most should be well under 15. Do NOT chain clauses with commas to build one long sentence — a comma-spliced 100-word sentence is exactly what this forbids. When in doubt, end the sentence with a period and start a new one. You may use at most ONE longer sentence in the entire chapter, and even that one must stay under 22 words.
+- Example of what NOT to do (too long, comma-spliced): "I sit at the table, staring at the ledger, thinking about my mother, and the way she always said she was helping, but really she wasn't, and I knew it, and everyone else did too."
+- Example of the style this needs instead (short, declarative): "I sat at the table. The ledger was open in front of me. My mother used to say she was helping. She wasn't. Everyone knew it, even then."
+- Vary sentence length deliberately. Every paragraph must contain at least one sentence of 20-25 words. Place it after two or three short sentences, never at the paragraph's start. Never write more than five consecutive sentences that begin with the same subject pronoun.
+- Dialogue must be rendered as spoken lines with an attribution tag, NOT as reported/summarized speech — but NEVER use quotation marks; this text goes straight to a TTS engine, so the spoken words sit directly in the sentence with a tag like "she said" instead of quote marks.
+  Bad (reported speech — do not do this): She said the arrangements were too expensive.
+  Good (direct speech, no quote marks): These arrangements are too expensive for a shop like this, she said.
+- Chapters the_cut, the_demand, and the_reckoning each need at least three separate lines of direct speech like the example above — plan the scene so at least three distinct moments are spoken aloud, not just described.
+- Render scenes, not summaries: specific rooms, specific objects, specific gestures. Avoid montage language such as "over the next few weeks...".
+- Address the listener directly ("you") if this chapter is a cta_open, cta_mid_1, cta_mid_2, or close beat; otherwise stay in scene, not direct address.
+- Use precise, concrete numbers wherever money, time, or quantity comes up — never vague amounts.
+- Draw on the vocabulary of the narrator's record-keeping profession ({{.Seed.RecordType}}) — ledger, invoice, receipt, log, chart, docket, whatever fits — as a recurring lens on the world.
+- The narrator never gloats and never explains the moral of the story out loud. Restraint over triumph, always.
+- Never use any of these phrases, in any form: {{range .BannedPhrases}}"{{.}}", {{end}}
+
+MECHANICALLY ENFORCED ACROSS THE WHOLE SCRIPT (a violation here regenerates this chapter, so get it right the first time):
+- No six-word phrase may repeat more than twice anywhere in the script.
+- No sentence opening (its first two words) may repeat more than eight times anywhere in the script.
+- The refrain phrase ({{.Bible.RefrainPhrase}}) may appear exactly twice in the whole script: once in chapter 6 and once in chapter 13. Never write it in any other chapter.
+- No exact dollar amount may be mentioned more than five times across the whole script.
+{{if .AvoidParagraphStarts}}
+Do not begin any paragraph with: {{range .AvoidParagraphStarts}}"{{.}}", {{end}}these openings are already used elsewhere in the script.
+{{end}}
+{{if .AvoidPhrases}}
+These phrases have been used twice already, do not use them again: {{range .AvoidPhrases}}"{{.}}", {{end}}one more use anywhere would break the six-word-phrase rule above.
+{{end}}
+{{if .AvoidSentenceOpenings}}
+These sentence openings have already been used eight times each, do not start any sentence with them again: {{range .AvoidSentenceOpenings}}"{{.}}", {{end}}one more use anywhere would break the sentence-opening rule above — start those sentences a different way.
+{{end}}
+{{if .MoneyMentionCounts}}
+Exact dollar amounts already mentioned in this script (the limit is five total mentions each): {{range .MoneyMentionCounts}}{{.}}; {{end}}
+{{end}}
+{{if .CrossScriptAvoidPhrases}}
+Never use these exact phrasings — they're signature phrases from other, previously produced scripts in this series, not this one, and repeating them verbatim reads as the same writer's tic across unrelated stories: {{range .CrossScriptAvoidPhrases}}"{{.}}", {{end}}
+{{end}}
+{{if and (ne .Spec.Index 6) (ne .Spec.Index 13)}}
+This is chapter {{.Spec.Index}}, NOT chapter 6 or 13 — the refrain phrase ("{{.Bible.RefrainPhrase}}") and any close paraphrase of it must NOT appear anywhere in this chapter's text. It is reserved exclusively for its two planted appearances; do not reach for it here as a thematic flourish just because it fits the mood.
+{{end}}
+
+SLOW-REVEAL DISCIPLINE (a real run showed this gets violated specifically in the hook — treat it as seriously as the mechanically-enforced rules above): chapters 1-8 (hook through cta_mid_1, i.e. before the_years) must NOT state the exact dollar amount stolen/misused, and must NOT name the antagonist's specific scheme or mechanism. The listener should sense something is wrong — a ledger that doesn't add up, a feeling of being underestimated — without yet knowing the number or the method. That reveal belongs to the_crack, the_demand, and the_reckoning (chapters 10, 12, 13), where the accumulated record finally makes it undeniable. Naming the figure or the mechanism early is a structural mistake, not a stylistic one — it spends the story's one real reveal before the record has been built up to justify it.
+
+{{if eq .Spec.Beat "hook"}}
+HOOK OPENING (mandatory, checked mechanically — this chapter is rejected without all four):
+- The FIRST sentence must be the channel's signature opening, word for word — do NOT vary it and do NOT replace "My name is" with anything else (no "I go by the name of", no "At forty-two, ..."): "My name is {{.Bible.Narrator.Name}} and I am {{.Bible.Narrator.Age}} years old." Write the age spelled out in words. This exact "My name is ..." opening is the channel's signature and is checked mechanically — the chapter is rejected without it.
+- Include the exact humiliation the narrator endured, rendered as a spoken line with attribution (see the direct-speech rule above) — the words someone actually said to belittle or dismiss the narrator, not a paraphrase of it.
+- State how long the narrator endured this — a number of years, months, or a duration that will pay off later.
+- Tease the object_container ({{.Seed.ObjectContainer}}) in passing — a glimpse or a mention, not the full scene from chapter 7. Do not explain what will end up inside it.
+{{end}}
+{{if eq .Spec.Beat "cta_open"}}
+CTA_OPEN REQUIREMENTS (mandatory — a generic "subscribe for more" is not acceptable here):
+- Name the specific object_container ({{.Seed.ObjectContainer}}) teased in the hook, and tie the subscribe ask directly to it — for example: "subscribe to see what was inside that {{.Seed.ObjectContainer}}." Do not reveal what ends up inside it here; the ask is curiosity about that specific object, not a generic channel plug.
+- Also ask, in these or close words: "drop a comment and tell me where you're listening from."
+{{end}}
+{{if or (eq .Spec.Beat "cta_mid_1") (eq .Spec.Beat "cta_mid_2")}}
+CTA_MID REQUIREMENT (mandatory): ask the listener a mirrored question about their OWN experience — one that echoes the specific situation the narrator is in at this exact point of the story (not a generic "have you ever felt underestimated" — tie it to what just happened in this chapter).
+{{end}}
+{{if or (eq .Spec.Beat "aftermath") (eq .Spec.Beat "close")}}
+NO ATMOSPHERE-AS-ENDING (mandatory): no sunset descriptions. No weather used as an emotional summary. Close on a concrete object or a stated fact, not on atmosphere — for example, close ON the legacy_artifact, a specific room, a specific object or gesture, or a plain statement of what the narrator did next, not on how the sky or the light looked.
+{{end}}
+{{if and (eq .Spec.Beat "close") .CloseImageDirective}}
+CLOSING IMAGE (mandatory — this dictates the LAST image of the entire script; follow it exactly, it is chosen to be different from other scripts in this series):
+{{.CloseImageDirective}}
+Do NOT end on an accounting or bookkeeping metaphor (ledger, balance, columns, tally, accounts, "the numbers adding up") and do NOT end on the kept/stolen object merely "resting in place" — this story has already lived in that register, and every other script in the series reaches for the same one. The final image must be concrete and sensory, in the domain the directive above names. You may still land the refrain_phrase's transformed meaning in the words, but the closing PICTURE itself must match the directive, not the account books.
+{{end}}
+GENRE ELEMENT PLACEMENT (only apply the ones relevant to chapter {{.Spec.Index}}):
+- Chapter 6 (the_cut): plant the refrain_phrase here, spoken or thought, exactly ONCE in this chapter's own text — checked mechanically, this chapter is rejected if it's missing OR if it appears a second time within this same chapter (do not open and close the chapter with it, or use it twice for emphasis). This is the ONLY other chapter besides chapter 13 allowed to use it at all.
+- Chapter 7 (exile): introduce the object_container as a place the narrator starts keeping things.
+- Chapters 10 and 12 (the_crack, the_demand): the seeded_line from the bible resurfaces, recontextualized — in YOUR OWN fresh wording, not quoted verbatim a second time. If an earlier chapter already used the seeded_line's exact phrasing, this occurrence must say the same idea differently; quoting it word-for-word twice anywhere in the script is a violation.
+- Chapter 12 (the_demand): the antagonist must self-incriminate IN WRITING — the written_overreach document. Mention a specific written document by name (letter, contract, email, signed paper, etc).
+- Chapter 13 (the_reckoning): the refrain_phrase RETURNS here, exactly ONCE in this chapter's own text — the same wording planted in chapter 6, recontextualized by everything that's happened since, but written only a single time in this chapter (not as a bookend at both the start and the end). The object container from chapter 7 is opened or referenced. The weak ally reappears and redeems themselves in some small way WITHOUT rescuing the narrator.
+- Chapters 15-16 (aftermath, close): the legacy_artifact resurfaces if it hasn't already; the weak ally's redemption completes here if it hasn't already.
+- Somewhere around chapter 10 (the_crack), give the antagonist exactly one scene that makes them human — not sympathetic enough to excuse them, just recognizably a person.
+- Chapter 14 (the_refusal) is NON-NEGOTIABLE: the narrator has clear leverage here and explicitly chooses not to use it for revenge. This is restraint, not a missed opportunity — state plainly what was not done.
+
+TTS FORMATTING (critical): in the "text" field, spell out every number, sum of money, year, and abbreviation as words (for example "twelve hundred dollars", "nineteen ninety-eight", "the E.R." becomes "the emergency room") — no digits and no "$" anywhere in "text". In the separate "display_text" field, write the same content with normal formatting (digits, "$", abbreviations) for on-screen or reading use.
+{{if .FixInstruction}}
+TARGETED FIX REQUIRED — this is a regeneration of an existing chapter to address a specific problem, not a first draft. Rewrite the whole chapter so it satisfies this instruction while staying consistent with the bible and prior chapters:
+{{.FixInstruction}}
+{{end}}
+{{if .Violations}}
+Your previous attempt failed validation for these reasons — fix all of them in this rewrite:
+{{range .Violations}}- {{.}}
+{{end}}
+{{end}}
+LENGTH IS MANDATORY, IN BOTH DIRECTIONS: the "text" field must land between {{.MinWords}} and {{.MaxWords}} words — target {{.Spec.TargetWords}} exactly.
+- Too short: do not stop early or wrap up quickly. If you notice you're running short, add another beat of scene, another concrete detail, another line of interiority, until you're inside the range.
+- Too long: do not keep elaborating once the scene has done its job. Overshooting {{.MaxWords}} words is rejected exactly like undershooting {{.MinWords}} — this is not "more is safer." Before you finish, count roughly how much you've written; if you're already near {{.MaxWords}}, close the chapter now rather than adding one more beat.
+
+Return ONLY a single JSON object, no other text, no markdown fences:
+{"text": "...", "display_text": "..."}

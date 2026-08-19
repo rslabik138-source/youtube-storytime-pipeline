@@ -1,0 +1,163 @@
+# Providers are tried in order by llm.WithFailover: Google AI Studio first,
+# Groq as backup. Adding Cerebras, OpenRouter, or a local Ollama is another
+# entry here, nothing else. api_key_env names an ENVIRONMENT VARIABLE, never
+# a key value — keys live only in the environment, never in this file or
+# in code.
+#
+# Each provider's `models` map picks ITS OWN model per role (generate,
+# summary, review, continuity) — not one shared model. This matters
+# specifically because generate_model/summary_model/review_model below are
+# only the DEFAULT/fallback names; whichever provider actually serves a
+# call uses its own `models` entry for that role instead, so failing over
+# to a backup provider can't collapse the generate/summary/review split
+# onto one model.
+language: en
+
+providers:
+  - name: google-ai-studio
+    base_url: https://generativelanguage.googleapis.com/v1beta/openai
+    api_key_env: GOOGLE_AI_STUDIO_API_KEY
+    # Gemini-family endpoint — thinking_budget below is only ever sent to
+    # a provider with this set to true.
+    supports_thinking_config: true
+    # `gen stats` on a real run showed generate's output tokens at 4.8x
+    # the estimated text tokens while reported thinking_tokens read 0 —
+    # the OpenAI-compat endpoint accepts reasoning_effort but never
+    # reports back actual thinking spend (completion_tokens_details.
+    # reasoning_tokens is simply absent from Gemini's responses there).
+    # The native generateContent endpoint's usageMetadata.
+    # thoughtsTokenCount does report it accurately.
+    native_thinking_api: true
+    # generate: gemini-3.5-flash-lite for every beat — see chapters.yaml's
+    # top comment for the real cost/quality data behind this choice
+    # (flash-lite over both gemini-3.6-flash and llama-3.3-70b).
+    models:
+      generate: gemini-3.5-flash-lite
+      summary: gemini-3.5-flash-lite
+      review: gemini-3.5-flash-lite
+      continuity: gemini-3.6-flash
+
+  - name: groq
+    base_url: https://api.groq.com/openai/v1
+    api_key_env: GROQ_API_KEY
+    # Groq's free tier caps at 12000 tokens/minute per request — fine for
+    # summary/review's small calls. generate was tried here too
+    # (llama-3.3-70b has ~0% thinking-token overhead, unlike either Gemini
+    # tier) but its prose didn't clear this genre's quality bar (choppy,
+    # undershot length, broke immersion) — see chapters.yaml's top comment.
+    # continuity (the whole-script check) was always too big for this cap.
+    roles: [summary, review]
+    max_tokens_per_request: 12000
+    models:
+      summary: llama-3.3-70b-versatile
+      review: llama-3.3-70b-versatile
+
+generate_model: gemini-3.5-flash-lite
+summary_model: gemini-3.5-flash-lite
+review_model: gemini-3.5-flash-lite
+
+# Thinking-token budget per role — only sent to providers with
+# supports_thinking_config: true (Groq etc. ignore this entirely). Chapter
+# generation and summaries need no reasoning at all; continuity's numeric
+# fact-check and review's quality scoring benefit from a little.
+#
+# For a provider going through the OpenAI-compat layer, this numeric value
+# is bucketed into the standard "reasoning_effort" field (none/low/medium/
+# high). For a provider with native_thinking_api: true (google-ai-studio),
+# it's sent as-is as thinkingConfig.thinkingBudget on the native
+# generateContent endpoint.
+#
+# CAVEATS, both confirmed against the real API: (1) gemini-3.6-flash
+# rejects a thinking budget/effort of exactly 0 outright with a 400 — this
+# model family doesn't accept fully-disabled reasoning. Through the
+# OpenAI-compat layer, 0 is silently bucketed up to "low" by this codebase;
+# through the native API it is NOT auto-adjusted, so this must be >= 1
+# here for a native_thinking_api provider, or every generate/summary call
+# will 400. (2) Even at the lowest accepted values (1, 128, 512 all
+# tested), gemini-3.6-flash still spends roughly 180-220 real thinking
+# tokens per call regardless — this is a hard per-call floor for this
+# model, not something any budget value here can get under. The number
+# below mainly controls providers/models that DO scale down further; check
+# `gen stats`'s thinking-tokens-by-role section after a run to see the
+# real number for your model.
+thinking_budget:
+  generate: 1
+  summary: 1
+  review: 512
+  continuity: 1024
+
+target_words: 8505
+wpm: 150
+
+quality_threshold:
+  mean_min: 7.0
+  axis_min: 5.0
+
+# true: each chapter call gets every prior chapter's full text instead of
+# its ~80-word summary. Much more expensive; only turn on if a provider's
+# context window and cost can absorb it.
+full_context: false
+
+max_bible_retries: 3
+max_chapter_retries: 5
+max_review_retries: 2
+max_continuity_fixes: 5
+# Raised 2->4 on 2026-08-19: `gen validate` run across the 4 most recently
+# accepted scripts found every single one had exhausted the old 2-round
+# budget and shipped with 25-51 unresolved blocking violations apiece —
+# including missing sentence-ending punctuation reaching the TTS as an
+# audible run-on, not just a mechanical nit. Paired with the free
+# mechanical fixes (exact-duplicate-sentence removal, missing-punctuation
+# insertion) now rerunning after every round instead of only once before
+# round 1 (see runFreeMechanicalFixes), a validate rerun on the next
+# script showed missing_punctuation and repeated_sentence_opening both
+# dropped to zero — the remaining rounds now go toward the harder
+# repeated_ngram/refrain-echo violations these two fixes don't touch.
+# Still far short of the original 6 (6 rounds x 16 chapters is up to 96
+# extra generation calls); if 4 stops converging too, raise
+# max_cost_usd in step — round 3-4 needs the budget to actually run,
+# see below.
+max_repetition_rounds: 4
+
+# A truncated/malformed JSON completion is a token-budget problem, not a
+# content-quality one — it gets this separate retry budget (each attempt
+# also raises MaxTokens by 50%) instead of spending one of
+# max_chapter_retries' real content attempts.
+max_technical_retries: 3
+
+# Stops one script's generation once its running cost (computed from
+# recorded usage against pricing.yaml's rates, INCLUDING thinking tokens)
+# crosses this many dollars — 0 disables the check. Checked before every
+# single LLM call (a hard stop: refuses to spend even one more call once
+# already over budget) as well as right after every save (a resumable
+# checkpoint). Needs pricing.yaml to be present; without it, cost is
+# unknown and this check is a no-op regardless of the value here.
+#
+# Raised 1.00->1.50 on 2026-08-19, in step with max_repetition_rounds
+# 2->4 above: real runs were already landing at $0.85-1.09 even at the
+# OLD 2-round budget, and this cap is checked before every single call —
+# hit it, and later steps (round 3-4, cross-script dedup) just fail
+# outright instead of running (confirmed: a real run hit "script cost
+# limit exceeded" mid cross-script-dedup at $1.0169 > $1.00, right after
+# the repetition guard had finally found real headroom to keep working).
+# 1.50 gives rounds 3-4 room to actually execute instead of the raised
+# round count being dead code in practice. Was lowered from 0.60 to 0.35
+# to 1.00 across earlier sessions — see git history / prior comments if
+# this needs tuning again; the intent each time was "stop a runaway
+# script," not "cap a script that's making real progress."
+max_cost_usd: 1.50
+
+# A profession can't repeat within this many of the most recent accepted
+# scripts.
+profession_cooldown: 8
+
+# 0 disables the global rate limiter; per-provider 429 backoff still applies
+# regardless.
+rate_limit_rps: 0
+request_timeout: 3m
+
+chapter_break_ms: 700
+paragraph_break_ms: 350
+
+db_path: output/scenario.db
+output_dir: output

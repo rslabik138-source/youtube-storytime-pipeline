@@ -1,0 +1,43 @@
+# Both Gemini (primary) and Imagen (fallback) are accessed through the
+# same Google AI Studio API key — already configured for the scenario
+# module, reused here rather than a second key.
+api_key_env: GOOGLE_AI_STUDIO_API_KEY
+base_url: https://generativelanguage.googleapis.com/v1beta/openai
+
+# NOTE: image-generation model IDs change as Google ships new versions —
+# verify these against current Gemini API docs if generation starts
+# returning "model not found".
+gemini_model: gemini-2.5-flash-image
+imagen_model: imagen-4.0-fast-generate-001
+
+# 16:9 (video-ready) or a square with crop room — see prompts/avatar.tmpl.
+aspect_ratio: "16:9"
+
+# Refuses to generate (before spending anything) if a single `avatar
+# generate` invocation's cost — cost_per_image * --variants — would exceed
+# this. See configs/pricing.yaml for the per-model $/image rates behind
+# that estimate.
+max_cost_usd: 0.50
+
+output_dir: output
+
+# Where scenario's `gen export --format bundle` writes each script's
+# directory — the only thing this module reads from scenario. The default
+# assumes the sibling-module layout go.work sets up (../scenario next to
+# this module); override if scenario exports somewhere else.
+scenario_bundle_dir: ../scenario/output/scripts
+
+# Background removal: the generated portrait is matted to a transparent PNG
+# (the final portrait.png) so it drops straight into compose as the portrait
+# cutout — no green screen needed, rembg segments the person from any
+# background. First run per model downloads the model (~folder in ~/.u2net).
+cutout:
+  enabled: true
+  # rembg executable. A user-scope Python install on Windows puts rembg.exe
+  # under %LOCALAPPDATA%\Programs\Python\Python3xx\Scripts and it may not be
+  # on PATH — hence the full path here (forward slashes are fine on Windows).
+  # Change to a bare "rembg" if you add that Scripts dir to PATH.
+  rembg_cmd: C:/Users/rslab/AppData/Local/Programs/Python/Python312/Scripts/rembg.exe
+  # birefnet-portrait = best hair edges for a head-and-shoulders human shot.
+  # Alternatives: u2net_human_seg (lighter), isnet-general-use (generic).
+  model: birefnet-portrait

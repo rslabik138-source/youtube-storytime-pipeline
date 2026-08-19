@@ -1,0 +1,34 @@
+# Build artifacts (rebuild with `go build`)
+*.exe
+*.exe~
+*.test
+*.out
+
+# Generated media, databases, and per-run workspaces — all regenerable,
+# too large/binary for a portfolio repo.
+**/output/
+background/work/
+background/*.mp4
+background/clip_library.json
+_fullproject/
+previews_old_backup/
+scenario.old/
+project-*.mp4
+project-*-preview.png
+project-*-script.txt
+compose/demo/*.mp4
+compose/demo/*.jpg
+compose/demo/*.png
+
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+
+# OS cruft
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

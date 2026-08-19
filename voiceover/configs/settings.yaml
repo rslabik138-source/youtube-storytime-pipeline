@@ -1,0 +1,39 @@
+# Kokoro-FastAPI's OpenAI-compatible endpoint, running locally in Docker.
+# See README.md for how to bring it up (GPU image, NVIDIA).
+kokoro_url: http://localhost:8880
+
+# Kokoro's real hard limit is 510 tokens per call. 400 chars stays
+# comfortably under that while still landing chunk boundaries on real
+# sentence breaks (see internal/chunk) — never raise this above 500.
+chunk_max_chars: 400
+
+# How many chunks synthesize in parallel. The target machine is a laptop
+# GTX 1660 Ti (6GB VRAM) — do not raise this past 3 by default; Kokoro
+# itself may still queue requests server-side even if this were higher.
+concurrency: 2
+
+speed: 1.0
+
+# Silence inserted between paragraphs / chapters during assembly — see
+# internal/chunk's Options and internal/assemble's join().
+pause_paragraph_ms: 350
+pause_chapter_ms: 700
+
+# EBU R128 integrated loudness target for the final mix (loudnorm's I=).
+loudness_lufs: -14
+
+output_format: wav
+
+# Per-chunk WAVs in output/<id>/chunks/ are deleted after assembly unless
+# this is true — useful for inspecting a specific chunk or debugging a
+# seam without re-synthesizing anything.
+keep_chunks: false
+
+db_path: output/voiceover.db
+output_dir: output
+
+# Where scenario's `gen export --format bundle` writes each script's
+# directory — the only thing this module reads from scenario. The default
+# assumes the sibling-module layout go.work sets up (../scenario next to
+# this module); override if scenario exports somewhere else.
+scenario_bundle_dir: ../scenario/output/scripts

@@ -1,0 +1,112 @@
+# Every list entry is a WeightedValue: `value` plus an optional `weight`
+# (omit it, or set 0, for the default weight of 1.0 — internal/seed treats
+# both the same). Add a value here to widen the pool; no Go code changes
+# needed.
+#
+# betrayal is the full catalog of every betrayal type any profession can
+# expose. internal/seed never draws from this list directly — it draws from
+# the *profession's own* exposes list in professions.yaml, which is a subset
+# of this catalog. Keep every profession's exposes values in sync with this
+# list.
+betrayal:
+  - value: savings_taken
+  - value: credit_stolen
+  - value: inheritance_rewritten
+  - value: care_fund_drained
+  - value: business_hijacked
+  - value: signature_forged
+  - value: medication_diverted
+  - value: wages_withheld
+  - value: property_retitled
+  - value: insurance_fraud
+  - value: overtime_stolen
+  - value: deposit_pocketed
+  - value: estate_looted
+  - value: trust_fund_drained
+  - value: pension_diverted
+  - value: tuition_fund_taken
+  - value: receipts_falsified
+  - value: deed_altered
+  - value: policy_cashed_out
+  - value: shift_pay_skimmed
+
+antagonist:
+  - value: mother_in_law
+  - value: brother_in_law
+  - value: sister_in_law
+  - value: stepfather
+  - value: business_partner
+  - value: adult_child
+  - value: older_sister
+  - value: cousin
+  - value: family_friend
+  - value: former_boss
+
+weak_ally:
+  - value: father
+  - value: grandmother
+  - value: younger_sibling
+  - value: old_coworker
+  - value: neighbor
+  - value: family_priest
+  - value: childhood_friend
+  - value: aunt
+
+humiliation_type:
+  - value: dismissive_joke
+  - value: cold_dismissal
+  - value: public_correction
+  - value: silent_exclusion
+  - value: mocking_nickname
+  - value: withheld_credit
+  - value: performative_pity
+
+# 3 and 7 are the "short" bucket, 9 and 11 the "long" bucket. internal/seed
+# forces alternation between short and long from one accepted script to the
+# next — two adjacent scripts never draw from the same bucket.
+duration:
+  short: [3, 7]
+  long: [9, 11]
+
+written_overreach:
+  - value: typed_demand_list
+  - value: email_chain
+  - value: signed_agreement
+  - value: text_thread_screenshot
+  - value: formal_letter
+  - value: notarized_statement
+
+object_container:
+  - value: tin_box
+  - value: oak_cabinet
+  - value: shoebox
+  - value: filing_cabinet
+  - value: cedar_chest
+  - value: safety_deposit_box
+  - value: hatbox
+
+legacy_artifact:
+  - value: childs_drawing
+  - value: fathers_letters
+  - value: mothers_recipe_card
+  - value: grandfathers_watch
+  - value: wedding_photo
+  - value: hand_stitched_quilt
+
+# Same forced-alternation treatment as duration: private and public are
+# never drawn twice in a row.
+reckoning_place:
+  private: [kitchen_table, hospital_waiting_room]
+  public: [public_anniversary, church_hall]
+
+ending_type:
+  - value: cold_silence
+  - value: quiet_acknowledgment
+  - value: narrator_walks_out
+  - value: family_fractures_quietly
+  - value: unspoken_truce
+
+protagonist_sex:
+  - value: female
+    weight: 1.4
+  - value: male

@@ -1,0 +1,19 @@
+# The channel's standing face library — 3-5 portraits, generated ONCE by
+# hand (not regenerated per script) and reused across every thumbnail so
+# the channel has a recognizable face in the feed. Requirements for each
+# portrait: smiling, looking at camera, waist-up, soft natural light,
+# blurred neutral background, no text. The smile is deliberate — it
+# contrasts with the thumbnail's grim text, and that contrast is the hook.
+#
+# age_feel [min, max] is a loose "reads as this age" bracket, not the
+# subject's real age — thumb picks any face whose bracket contains the
+# narrator's age and whose sex matches.
+faces:
+  - id: face-01
+    file: assets/faces/face-01.png
+    sex: female
+    age_feel: [35, 55]
+  - id: face-02
+    file: assets/faces/face-02.png
+    sex: male
+    age_feel: [40, 60]

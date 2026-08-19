@@ -1,0 +1,29 @@
+# $/million-token rates used only to compute the cost column in `gen
+# stats` and `gen generate`'s end-of-run usage table — never sent to any
+# API, purely local bookkeeping. A model with no entry here shows "?" for
+# cost rather than a silent, misleading $0.00.
+#
+# Thinking tokens are billed at output_per_million — they're already
+# counted inside a call's tokens_out, this file has no separate rate for
+# them.
+#
+# gemini-3.6-flash's rates below are computed directly from a real billing
+# dashboard sample (135K input tokens = $0.20, 220K output tokens = $1.65).
+# The other two are ESTIMATES based on typical "flash-lite" and Groq
+# pricing tiers — verify against your own dashboard and correct them.
+models:
+  gemini-3.6-flash:
+    input_per_million: 1.4815
+    output_per_million: 7.50
+
+  gemini-3.5-flash-lite:
+    # Back-solved 2026-08-09 from a real balance drop ($0.68 for one full
+    # ~7k-word run) after subtracting the known-real continuity + avatar
+    # costs — the old 0.10/0.40 estimate under-reported this model ~6.5x.
+    # CONFIRM against the Google AI Studio billing dashboard and correct.
+    input_per_million: 0.65
+    output_per_million: 2.60
+
+  llama-3.3-70b-versatile:
+    input_per_million: 0.59 # estimate — verify against your Groq plan
+    output_per_million: 0.79 # estimate — verify against your Groq plan

@@ -1,0 +1,6 @@
+# $/call estimate for thumbnail text generation — a short, cheap JSON call,
+# not a full chapter. Verify against your own Google AI Studio billing
+# dashboard; this is a starting estimate, not a measured number.
+models:
+  gemini-3.5-flash-lite:
+    cost_per_call_usd: 0.001

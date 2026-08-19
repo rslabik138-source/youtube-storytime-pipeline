@@ -1,0 +1,14 @@
+# $/image rates used only to compute meta.json's cost_usd and to enforce
+# max_cost_usd — never sent to any API, purely local bookkeeping. A model
+# with no entry here shows "?" for cost rather than a silently misleading
+# $0.00.
+#
+# ESTIMATES — verify against your own Google AI Studio billing dashboard
+# and correct them. Gemini's free tier may cover image generation entirely
+# depending on your plan; imagen-4.0-fast is a paid-only model.
+models:
+  gemini-2.5-flash-image:
+    cost_per_image_usd: 0.039 # estimate — verify
+
+  imagen-4.0-fast-generate-001:
+    cost_per_image_usd: 0.02 # estimate — verify

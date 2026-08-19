@@ -1,0 +1,99 @@
+# Each profession pairs an epistemology (the way the job teaches someone to
+# read the world) with a record_type (the kind of record that habit leaves
+# behind), an exposes list (which betrayal(s) from axes.yaml's betrayal
+# catalog that record type is capable of exposing), and an attire (the
+# narrator's work clothing, worn and job-specific — feeds the avatar
+# module's portrait prompt directly, see internal/story.Seed.Attire).
+# internal/seed enforces the epistemology/record_type/exposes pairing as a
+# hard constraint: a script's betrayal is drawn only from its profession's
+# exposes list, never freely from the full catalog.
+#
+# To add a profession: add an entry here with a unique name, a first-person
+# epistemology line, a record_type, an attire, and 1+ exposes values that
+# already exist in configs/axes.yaml's betrayal list. No Go code changes
+# needed. attire should read as years-worn and functional, never new or
+# staged — this is someone who does this job every day, not a costume.
+professions:
+  - name: nurse
+    epistemology: vitals and timestamps tell the truth before anyone in the room does
+    record_type: the care log
+    attire: faded scrubs, a laminated ID badge clipped at the chest, comfortable worn-down shoes
+    exposes: [care_fund_drained, medication_diverted, savings_taken]
+
+  - name: auto mechanic
+    epistemology: every rattle has a cause, and the cause is always cheaper to face early
+    record_type: the repair ticket
+    attire: oil-stained coveralls unzipped at the collar, a shop rag hanging from one pocket, grease worked into the knuckles
+    exposes: [insurance_fraud, overtime_stolen, credit_stolen]
+
+  - name: electrician
+    epistemology: you trace the circuit until it tells you exactly where the short lives
+    record_type: the job sheet
+    attire: a faded work shirt with a tool belt slung low, a headlamp pushed up on the forehead, calloused hands
+    exposes: [signature_forged, wages_withheld, property_retitled]
+
+  - name: accountant
+    epistemology: the numbers balance, even the ones somebody hoped nobody would check
+    record_type: the ledger
+    attire: a plain button-down with the sleeves rolled, reading glasses pushed up into the hair, a cardigan worn thin at the elbows
+    exposes: [inheritance_rewritten, estate_looted, trust_fund_drained]
+
+  - name: hospital cleaner
+    epistemology: a room tells you exactly who was really in it, no matter what they say happened
+    record_type: the shift log
+    attire: a worn housekeeping uniform, a keyring clipped to a belt loop, disposable gloves tucked in a pocket
+    exposes: [pension_diverted, shift_pay_skimmed, savings_taken]
+
+  - name: cook
+    epistemology: you taste what's actually there, not what the menu claims is there
+    record_type: the order book
+    attire: a stained apron over a plain t-shirt, a bandana holding back the hair, forearms marked with old burn scars
+    exposes: [deposit_pocketed, receipts_falsified, business_hijacked]
+
+  - name: kindergarten teacher
+    epistemology: children repeat exactly what they hear at home, word for word
+    record_type: the daily notes
+    attire: a soft cardigan over a simple dress, a lanyard with classroom keys, comfortable flat shoes
+    exposes: [tuition_fund_taken, savings_taken, wages_withheld]
+
+  - name: veterinarian
+    epistemology: a body doesn't lie about how it's been treated
+    record_type: the treatment chart
+    attire: a well-worn white coat over scrubs, a stethoscope around the neck, faint animal hair on the sleeves
+    exposes: [insurance_fraud, medication_diverted, business_hijacked]
+
+  - name: seamstress
+    epistemology: every seam shows you exactly where someone cut corners
+    record_type: the alterations book
+    attire: a canvas pincushion strapped to one wrist, a measuring tape draped around the neck, a plain blouse dusted with thread
+    exposes: [deposit_pocketed, credit_stolen, receipts_falsified]
+
+  - name: plumber
+    epistemology: water always finds the truth, it just takes the path of least resistance
+    record_type: the service invoice
+    attire: a worn work shirt with rolled sleeves, a heavy tool belt, hands permanently stained at the knuckles
+    exposes: [property_retitled, deed_altered, overtime_stolen]
+
+  - name: librarian
+    epistemology: a checkout record remembers what people would rather forget they read
+    record_type: the circulation record
+    attire: a cardigan with a pen clipped to the collar, reading glasses on a beaded cord, sensible flat shoes
+    exposes: [signature_forged, estate_looted, inheritance_rewritten]
+
+  - name: mail carrier
+    epistemology: you know exactly who stopped writing to whom, and exactly when
+    record_type: the delivery route log
+    attire: a faded postal uniform, a canvas satchel worn across one shoulder, sun-weathered skin at the collar and wrists
+    exposes: [policy_cashed_out, savings_taken, wages_withheld]
+
+  - name: school bus driver
+    epistemology: you know every family's real schedule, not the one they post on the fridge
+    record_type: the route manifest
+    attire: a plain uniform polo, a clipboard tucked under one arm, a whistle on a lanyard
+    exposes: [tuition_fund_taken, shift_pay_skimmed, care_fund_drained]
+
+  - name: florist
+    epistemology: you remember exactly which occasions somebody quietly stopped sending flowers for
+    record_type: the order ledger
+    attire: a canvas apron dusted with pollen over a simple shirt, sleeves pushed up, small scratches across the forearms from thorns
+    exposes: [deposit_pocketed, business_hijacked, receipts_falsified]

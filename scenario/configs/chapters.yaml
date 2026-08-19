@@ -1,0 +1,248 @@
+# The 16-beat structure for one ~8,500-word (~55min @ 150wpm) script.
+# target_words is measured against real competitor scripts in this genre —
+# do not change these numbers without re-measuring against the format this
+# channel is competing in.
+#
+# Model choice: settings.yaml's provider maps `generate` to gemini-3.5-
+# flash-lite for every beat — no per-beat override (a `model:` field is
+# still supported here via config.ChapterSpec.Model, for the rare case a
+# specific beat needs pinning to a different model).
+#
+# History, from real side-by-side testing across gemini-3.6-flash,
+# gemini-3.5-flash-lite, and llama-3.3-70b (all at real API rates, same
+# bible/context): (1) thinking-token overhead on BOTH Gemini tiers is not
+# controllable via thinking_budget on real (non-trivial) calls — observed
+# 75-95% of output tokens spent on hidden reasoning regardless of budget,
+# on either model, native API or not — so absolute cost is driven far more
+# by which model's per-token RATE is lower than by which one "thinks more
+# efficiently". (2) An earlier attempt at a hybrid (pinning hook/the_cut/
+# the_reckoning/the_refusal/close to gemini-3.6-flash, everything else on
+# flash-lite) cost $1.14/script in practice — those 5 pinned beats alone
+# were 78% of that, because they include the largest, most retry-prone
+# beat (the_reckoning) and 3.6-flash's per-token rate is high regardless of
+# its thinking ratio. All-flash-lite instead costs roughly $0.30/script.
+# (3) llama-3.3-70b has ~0% thinking overhead (it's not a reasoning model)
+# and is dramatically cheaper, but its prose quality didn't clear this
+# genre's bar in testing (choppy, undershot length, broke immersion by
+# naming the genre out loud) — not used for chapter generation as a result.
+# (4) flash-lite's one real, fixable quality issue was naming the exact
+# stolen amount in the hook, breaking the slow-reveal structure — fixed at
+# the prompt level (chapter.tmpl's SLOW-REVEAL DISCIPLINE rule) rather
+# than by paying a per-model premium for the whole script.
+chapters:
+  - index: 1
+    beat: hook
+    target_words: 170
+    description: >
+      Cold open in the narrator's own voice, present tense feel even though
+      it's past tense. Land the core irony of the profession in the first
+      few lines. No backstory yet — a single vivid image or line of
+      dialogue that makes the ending inevitable in hindsight.
+
+  - index: 2
+    beat: cta_open
+    target_words: 85
+    description: >
+      Direct address to the listener. Ask them to subscribe / stay for the
+      story. Restate, in one line, what kind of story this is (a quiet
+      reckoning, not a shouting match) without giving away the ending.
+
+  - index: 3
+    beat: pivot
+    target_words: 170
+    description: >
+      Step back from the hook into the narrator's ordinary life just before
+      everything starts. Establish the profession and the habit of mind it
+      teaches — this is the epistemology the record_type will later cash in.
+
+  - index: 4
+    beat: family_law
+    target_words: 600
+    description: >
+      Establish the family's unspoken rule — the FamilyLaw aphorism from the
+      bible — the belief the family lives by that makes the coming
+      humiliation feel normal to everyone except the narrator.
+
+  - index: 5
+    beat: cast
+    target_words: 680
+    description: >
+      Introduce the antagonist and the weak ally in scene, not summary.
+      Plant the object_container and/or legacy_artifact here, in passing,
+      long before it matters. Plant the seeded_line as something someone
+      says almost in passing.
+
+  - index: 6
+    beat: the_cut
+    target_words: 680
+    description: >
+      The original humiliation, rendered as a live scene with real spoken
+      dialogue (no quotation marks — the words are woven into the prose for
+      TTS). This is the wound the rest of the script answers. Plant the
+      refrain_phrase here for the first time.
+
+  - index: 7
+    beat: exile
+    target_words: 765
+    description: >
+      The narrator withdraws — not dramatically, just quietly, the way
+      people do after a cut that was never acknowledged. Introduce the
+      object_container as somewhere the narrator starts keeping things.
+
+  - index: 8
+    beat: cta_mid_1
+    target_words: 85
+    description: >
+      Second direct address. Acknowledge the listener is still here.
+      One line of foreshadowing without spoiling the mechanism of the
+      reckoning.
+
+  - index: 9
+    beat: the_years
+    target_words: 1190
+    split: true
+    description: >
+      Time passes — Duration years, told through a handful of concrete
+      scenes rather than a montage of summary. The habit of mind from the
+      profession becomes a quiet, private discipline: the narrator keeps
+      records. Show, don't announce, the record accumulating.
+
+  - index: 10
+    beat: the_crack
+    target_words: 850
+    description: >
+      The family's lie starts to strain under its own weight. A small,
+      concrete event surfaces the seeded_line again, now in a new light.
+      The antagonist gets their one humanizing scene somewhere around here
+      — a moment that makes them a person, not a cartoon.
+
+  - index: 11
+    beat: cta_mid_2
+    target_words: 85
+    description: >
+      Third direct address, later in the story, closer to the reckoning.
+      Ask a direct question of the listener that mirrors the story's
+      central tension.
+
+  - index: 12
+    beat: the_demand
+    target_words: 765
+    description: >
+      The antagonist overreaches in writing (the written_overreach) —
+      self-incriminating on paper. This is the moment the record_type the
+      narrator has been keeping suddenly has undeniable, dated evidence to
+      answer.
+
+  - index: 13
+    beat: the_reckoning
+    target_words: 1105
+    split: true
+    description: >
+      The confrontation, at reckoning_place, built from the accumulated
+      record — not a single dramatic reveal but the weight of years of
+      documentation laid out plainly. The weak ally reappears here (or in
+      aftermath) and redeems themselves in some small way, without rescuing
+      the narrator. The legacy_artifact resurfaces if it hasn't already.
+
+  - index: 14
+    beat: the_refusal
+    target_words: 595
+    description: >
+      The narrator has leverage and chooses not to use it for revenge. This
+      refusal is non-negotiable in this genre — restraint, not a heroic
+      act, not a triumphant speech. State plainly what was not done and why.
+
+  - index: 15
+    beat: aftermath
+    target_words: 510
+    description: >
+      The quiet, ordinary-feeling world after the reckoning. The
+      legacy_artifact (if not already resurfaced) appears here as a final
+      grace note. The weak ally's small redemption lands fully if it hasn't
+      already.
+
+  - index: 16
+    beat: close
+    target_words: 170
+    description: >
+      Return to the refrain_phrase one last time, transformed by everything
+      that's happened since chapter 6. Final direct address to the
+      listener. End on restraint, not triumph. The LAST image of the script
+      is dictated by the CLOSING IMAGE directive in your instructions —
+      follow it exactly and do not default to a ledger/balance/accounts
+      image.
+
+# Rotated across scripts by the close beat so consecutive videos don't land
+# on the same final shape or the same accounting-metaphor register (a real
+# audit of two back-to-back scripts found identical closing schemas and
+# vocabulary — ledger/balance/columns, "the object rested in place"). The
+# close beat picks one by (recorded-script-count mod len), which cycles
+# through all of them before repeating, so no two consecutive scripts share
+# a closing image. Add or reword freely; keep each a CONCRETE, non-financial
+# final image.
+close_images:
+  - id: departure
+    directive: >
+      End on the narrator physically leaving the place for the last time: a
+      threshold crossed, a door eased shut, cold air in the lot, a badge or
+      set of keys left on a hook. The final image is motion away from the
+      building — not a record, not a number, not an object sitting in a
+      drawer.
+  - id: handover
+    directive: >
+      End by putting the evidence into someone else's hands and letting go —
+      an auditor, a young co-worker, a stranger who will need it next. The
+      final image is the thing leaving your fingers and belonging to someone
+      else now, not resting where you kept it.
+  - id: witness_face
+    directive: >
+      End on another person's face in the moment they finally understand
+      what you always knew — a small shift in expression, a silence, the
+      thing they do not manage to say. The final image is a human reaction,
+      not paperwork.
+  - id: mundane_morning
+    directive: >
+      End on an ordinary sensory detail of the next day — coffee going cold,
+      a bus exhaling at a stop, frost on a windshield, someone's radio two
+      rooms over. Life resumes in a register that has nothing to do with
+      money, records, or being proven right.
+  - id: the_discard
+    directive: >
+      End by destroying or discarding the thing you kept — pages fed to a
+      shredder, ash cooling in a bin, a box set out at the curb. The final
+      image is its absence and the lightness after, not its safekeeping.
+  - id: one_line
+    directive: >
+      End on a single plain spoken sentence to one specific person, then
+      silence. No metaphor, no stated moral — just the line, and the small
+      thing the room or the other person does right after it.
+
+# Call-to-action copy for the three cta beats, filled directly (NOT
+# model-generated) and rotated by recorded-script count so consecutive
+# videos never repeat a CTA — two back-to-back scripts had produced
+# verbatim-identical calls to action. In "open" variants the literal
+# {object} is replaced with the seed's object_container. Keep each ~80
+# words (the cta beats target 85), TTS-safe (spell out any number, no
+# symbols), first person, and in the channel's calm register.
+cta:
+  open:
+    - "Before I take you any further, do one small thing for me. Stay right here, and subscribe, so you can see what was really kept inside that {object}. I am not going to shout or scream my way through this. It is a quiet reckoning, told slowly, the way it actually happened, with no screaming match waiting at the end. And while you are here, drop a comment and tell me where in the world you are listening from tonight."
+    - "Give me one favor before the story goes on. Hit subscribe and stay with me, because what ended up inside that {object} is the whole reason I am telling you any of this. I promise you this is not a shouting match. It is a slow, patient settling of accounts, and every piece of it is true. Leave a comment and let me know what city or country you are listening from right now."
+    - "Stay with me for a moment. If you subscribe now, you will get to see exactly what that {object} was hiding, and why I held onto it for so long. I want to be honest with you up front. Nobody yells in this story. It is a quiet reckoning, not a scene made in front of a crowd. Before we continue, drop a comment below and tell me where you are listening from."
+    - "Let me ask you to do something simple. Subscribe, and stay right here with me, so you can find out what was tucked away inside that {object}. This is not one of those stories full of screaming and slammed doors. It is calmer than that, and colder. A quiet reckoning, built one small piece at a time. And tell me in the comments where you are listening from tonight, because I genuinely like to know."
+    - "Before the next part, take a second and subscribe. What was inside that {object} changes everything you are about to hear, and I do not want you to miss it. I will say this plainly. There is no shouting match coming. This is a patient, quiet reckoning, and it lands harder for being quiet. While you are here, leave a comment and tell me where in the world you are listening from."
+    - "Do me one kindness and subscribe before we go on. Everything turns on what I kept inside that {object}, and you will want to be here when it finally opens. I am not going to raise my voice once in this. It is a slow reckoning, not a fight staged in front of an audience. And drop a comment below, if you would, telling me what town or country you are listening from tonight."
+  mid_1:
+    - "Let me stop here and ask you something directly. Have you ever been treated like you did not quite count, like your work was invisible right up until the moment something went wrong? If you have, I would really like to hear about it. Leave a comment and tell me what happened. It helps to know I am not the only one who spent years being underestimated by the people who should have known better."
+    - "I want to pause and ask you a real question. Has anyone in your life ever decided, without ever asking, that you were the one who did not matter? That your quiet made you easy to overlook? If that lands for you, tell me in the comments. I read them, and honestly, hearing that other people have stood where I stood is part of why I can tell this story at all."
+    - "Take a second with me here. Have you ever kept your head down and done the work, only to watch someone louder take the credit and the reward? I know exactly how that silence feels. If you have lived it, drop a comment and tell me your version. There is something steadying about knowing how many of us were quietly written off and simply kept going anyway."
+    - "Let me ask you before I go on. Was there ever a person who looked right past you, who treated your patience as permission to take more than their share? Mine did, for years. If you recognize that feeling, I would be grateful if you left a comment about it. Knowing you are out there, listening and nodding along, makes telling this a little easier."
+    - "I have to pause and ask. Have you ever been the reliable one, the person everybody counted on and nobody thanked, right up until the day they needed someone to blame? If you have, tell me in the comments what that did to you. I am asking honestly. So much of this story is about being underestimated, and I would like to know I am in good company."
+    - "Let me put a question to you. Has someone ever mistaken your calm for weakness, and helped themselves to what was yours because they were sure you would never say a word? That was my whole life for a while. If it was yours too, leave a comment. I mean it. Hearing where you have been makes carrying this story forward feel less lonely."
+  mid_2:
+    - "We are close now, so let me ask you one more thing before it turns. When you have been pushed as far as I had been, what finally makes a quiet person stop staying quiet? I am asking because I think you already know the answer. If you have felt that line get crossed in your own life, tell me in the comments. Then stay with me, because what comes next is why I kept every record."
+    - "Before the last turn, I want to ask you something. Have you ever reached the point where being patient stopped being a virtue and started to feel like a cage? That is exactly where I was. If you know that feeling, leave a comment and tell me. And then stay right here, because everything I quietly held onto is about to matter all at once."
+    - "Let me pause one more time. Do you believe people like me, the quiet ones, the overlooked ones, ever really get their moment? I used to wonder the very same thing. If you have an opinion, I want to hear it in the comments. Then keep listening, because what happens next is the reason I never threw a single piece of proof away."
+    - "One more question before it all tips over. When someone has spent years telling you that you do not matter, what does it take for the truth to finally speak louder than they can? Tell me what you think in the comments. And stay with me, because the answer is closer than they ever imagined, and it had been sitting in plain sight the whole time."
+    - "We are almost at the turn, so let me ask. Have you ever watched someone simply assume you would stay silent forever, only because you always had? If you have, drop a comment and tell me how it ended for you. Then stay right here with me, because staying silent was never the same thing as forgetting, and I remembered all of it."
+    - "Before the reckoning, I want one honest answer from you. Do you think a record, a quiet and careful record, can weigh more than the loudest voice in the room? I came to believe that it can. Tell me if you agree in the comments. And then stay with me, because what I kept is about to be the only thing that matters."

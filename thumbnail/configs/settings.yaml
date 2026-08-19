@@ -1,0 +1,29 @@
+# thumb reads GOOGLE_AI_STUDIO_API_KEY (the same key scenario/avatar already
+# use) for the cheap text-generation model — nothing else in this pipeline
+# calls an API: the portrait comes from the face library below, and
+# composition is pure HTML/CSS rendered by a local headless Chrome.
+api_key_env: GOOGLE_AI_STUDIO_API_KEY
+base_url: https://generativelanguage.googleapis.com/v1beta/openai
+
+# Cheap on purpose — this is a handful of short ALL-CAPS lines, not prose.
+text_model: gemini-3.5-flash-lite
+
+# 4 variants at ~$0.001 each is ~$0.004 — max_cost_usd is a hard ceiling
+# checked BEFORE any call, not a target.
+max_cost_usd: 0.05
+
+output_dir: output
+
+# Where scenario's `gen export --format bundle` writes each script's <id>/
+# directory — the ONLY thing thumb reads from the scenario module.
+scenario_bundle_dir: ../scenario/output/scripts
+
+# Leave blank to let chromedp auto-detect an installed Chrome/Chromium/Edge.
+# Set explicitly if that detection picks the wrong browser or finds none —
+# e.g. chrome_path: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+chrome_path: ""
+render_timeout_sec: 30
+
+badge:
+  enabled: false
+  text: underestimated

@@ -1,0 +1,58 @@
+# Every position, size, color, and opacity the composition uses — retune
+# the look here, never in Go code.
+
+background:
+  blur: "none"        # "none"/blank = no blur (background plays as generated); set "radius:power" e.g. "10:1" to soften it
+  brightness: 0       # 0 = no darkening (background plays as generated); negative darkens
+
+vignette:
+  angle: "none"       # "none"/blank = no vignette; set an angle e.g. "PI/5" to darken the corners
+
+portrait:
+  height: 864          # 80% of a 1080px-tall frame; width scales to match
+  x: 40                # left offset; Y is always bottom-anchored (H-h)
+
+waveform:
+  width: 1536           # 80% of a 1920px-wide frame
+  height: 160
+  mode: cline
+  color: "white@0.9"
+  rate: 30
+  draw: full            # THE visibility fix: "full" draws the waveform bright; the default "scale" dims each column by amplitude into a faint gray that vanishes on a dark background
+  gain: 1               # pre-amplifies ONLY the showwaves input (not the audio that plays); draw=full is bright at unity, raise for taller peaks
+  scale: lin            # amplitude mapping (lin|log|sqrt|cbrt)
+  bottom_margin: 20     # Y is derived as H - height - bottom_margin (smaller = waveform sits lower)
+
+logo:
+  x: 40
+  y: 40
+  height: 60
+
+# Subtitles are rounded caption cards drawn in Go and overlaid by ffmpeg
+# (NOT libass — it can't round a box's corners). Colors are plain #RRGGBB.
+subtitles:
+  font_file: ""              # path to a .ttf (e.g. Montserrat SemiBold); blank uses an embedded bold sans-serif
+  font_size: 54
+  text_color: "#FFFFFF"
+  box_color: "#000000"
+  box_opacity: 0.55          # 0..1 — lower = more of the background shows through the card
+  corner_radius: 20
+  padding_x: 32              # px inside the card, left/right of the text
+  padding_y: 16              # px inside the card, above/below the text (equal top & bottom)
+  line_spacing: 1.15         # line advance as a multiple of font size
+  max_width: 860             # wrap text past this width (px) before the card grows
+  # The card centers horizontally within [zone_left, width-zone_right] and
+  # vertically in the frame — a big zone_left clears a bottom-left portrait.
+  zone_left: 950
+  zone_right: 60
+  words_per_line_min: 4
+  # A sentence longer than max words is split into balanced cards (never a
+  # lone last word) — see internal/subtitles/group.go.
+  words_per_line_max: 9
+
+music:
+  volume: 0.12
+  duck_threshold: 0.03
+  duck_ratio: 8
+  duck_attack: 20
+  duck_release: 400

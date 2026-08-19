@@ -1,0 +1,59 @@
+STORY FACTS:
+- Narrator: {{.Narrator.Name}}, {{.Narrator.Age}} years old, {{.Profession}}
+- Family law (the family's unspoken rule): {{.Story.FamilyLaw}}
+- Refrain phrase: {{.Story.RefrainPhrase}}
+- Seeded line (a quotable line already established in this story): {{.Story.SeededLine}}
+- Antagonist: {{.Story.Antagonist}}
+- Betrayal: {{.Story.Betrayal}}
+- How it resolves: {{.Story.EndingType}}
+- Known concrete numbers: {{range $k, $v := .Story.Numbers}}{{$k}}={{$v}}; {{end}}
+
+Write the TEXT for a YouTube thumbnail in the exact style of this channel's
+competitors: a dense, first-person, mini-story that a viewer reads like the
+opening of a story and MUST click to finish. This is family-betrayal / quiet-
+revenge storytime.
+
+Follow this arc across the lines, in order:
+ 1. THE SETUP — the situation, who did what, when. First person ("MY", "I").
+ 2. THE CRUELTY — quote the antagonist's cruel words VERBATIM inside real
+    quotation marks, with a hot verb: snarled, screamed, laughed, smirked,
+    said. Use the seeded line or family law as the source of the quote.
+ 3. THE RESTRAINT — the narrator's quiet reaction: "I SAID NOTHING", "I JUST
+    SMILED", "I DIDN'T SAY A WORD".
+ 4. THE TURN — a jump in time or a reversal beginning: "8 MONTHS AGO...",
+    "2 DAYS LATER", "HOURS LATER", "THIS MORNING", "THEN".
+ 5. THE CLIFFHANGER (the final_line) — cut off at the edge of the reveal,
+    never resolving it. End mid-breath: "...", or a punchy fragment like
+    "PALE-FACED.", "AND WROTE...", "WAITING ON THE PORCH", "BEGGING TO TAKE
+    IT BACK". The viewer must NOT be able to guess the ending.
+
+Hard rules (all enforced, a violation is rejected):
+ - 6 to 10 lines total (including final_line) — this is a DENSE block of text,
+   like the competitor examples, not a few big words.
+ - 40 to 65 words total across the whole thumbnail.
+ - ALL CAPS.
+ - Contains at least one VERBATIM quote inside real double quotes.
+ - Use the concrete number(s) and a time marker from the facts.
+ - final_line never reveals the ending.
+
+OPENING LINE — line 1 MUST follow this construction. Fill the {placeholders}
+from the story facts; keep the shape, then let lines 2+ continue the story:
+    {{.Opener.ChosenPattern}}
+{{if .Opener.Recent}}Do NOT open with the same construction as these recent thumbnails:
+{{range .Opener.Recent}}- {{.}}
+{{end}}{{end}}
+Color rules — highlight the phrases that carry the drama, exactly like the
+competitor thumbnails (most lines white, a few loud accents):
+ - white: the connective narration, the default for most lines
+ - yellow: the antagonist's quoted cruelty, or the money/number
+ - green or magenta or cyan: a secondary shock beat (the accusation, the turn)
+ - red: the single most damning phrase
+ - at most 4 distinct colors besides white across the whole thumbnail
+ - never assign a color to the final line — it always renders on its own solid red plate
+{{if .Violations}}
+Your previous attempt failed validation for these reasons — fix all of them in this rewrite:
+{{range .Violations}}- {{.}}
+{{end}}
+{{end}}Return ONLY a single JSON object, no other text, no markdown fences:
+{"lines":[{"text":"...","color":"white|yellow|green|magenta|cyan|red"}],
+ "final_line":"..."}

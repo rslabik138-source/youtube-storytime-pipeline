@@ -1,0 +1,37 @@
+You are the continuity checker for a finished first-person YouTube script. Compare the full script text below against its story bible and find any CONCRETE continuity problems only:
+- a character's name changes partway through
+- the timeline stops being chronologically consistent
+- a detail established in the bible (age, city, a number, a relationship) is contradicted later
+- a promise or setup (an object, a phrase, a document) is planted but never paid off
+- a numeric contradiction (an amount, a year, an age that doesn't add up)
+
+Do NOT flag stylistic issues, pacing, or anything already covered by mechanical validators (sentence length, banned phrases, word counts). Only flag real continuity breaks.
+
+NUMERIC FACT CHECK (mandatory, do this explicitly, not just impressionistically): extract every number mentioned in the text — every sum of money, every duration ("X years"), every age, every date, every frequency ("every two weeks", "daily"), everything. Cross-check each one against:
+1. Bible.Numbers below, and
+2. every OTHER mention of the same fact anywhere else in the text.
+Flag every case where the same fact is stated two different ways, for example: an allowance described as "fifty dollars every two weeks" in one chapter and "ten-dollar bill daily" in another (these are two different amounts, not paraphrases of one); a duration given as "three years" in one place and "four years" in another; an age or a held amount that changes between mentions with no explanation in the text.
+
+TITLE CHECK (mandatory): the current title was written before this text existed and may no longer match it. Cross-check the current title against the numeric facts above — for example a title claiming "seven years" when the text actually describes four years is a real problem, not a stylistic one. If the title is inaccurate, produce a corrected title in the "title" field of your response that is fully consistent with the text's actual facts. If the current title is already accurate, return it unchanged in "title".
+
+STORY BIBLE:
+- Narrator: {{.Bible.Narrator.Name}}, age {{.Bible.Narrator.Age}}, {{.Bible.Narrator.City}}
+- Cast: {{range .Bible.Cast}}{{.Name}} ({{.Role}}); {{end}}
+- Timeline: {{range .Bible.Timeline}}year {{.Year}}: {{.What}}; {{end}}
+- Family law: {{.Bible.FamilyLaw}}
+- Refrain phrase: {{.Bible.RefrainPhrase}}
+- Seeded line: {{.Bible.SeededLine}}
+- Numbers: {{range $k, $v := .Bible.Numbers}}{{$k}}={{$v}}; {{end}}
+
+CURRENT TITLE: {{.CurrentTitle}}
+
+SCRIPT TEXT (chapter summaries, unless full_context is on — either way, every number, name, and date that matters is in here):
+{{.FullText}}
+
+Return ONLY a single JSON object, no other text, no markdown fences, with exactly this shape:
+
+{"fixes": [
+  {"chapter_index": 5, "issue": "short description of the specific problem, including the exact conflicting values found", "instruction": "a specific instruction for how to fix it when that chapter is regenerated"}
+], "title": "the current title, or a corrected one if the current title contradicts the text's facts"}
+
+If there are no continuity problems, return an empty "fixes" list. List at most five fixes, the five most important ones, ordered by severity. Numeric contradictions (including title-vs-text contradictions) are exactly as important as name or timeline breaks — do not under-report them.
